@@ -42,8 +42,7 @@ local function executeGitHubScript(url)
     end
 end
 
-local githubScriptURL = "https://raw.githubusercontent.com/yourusername/yourrepository/main/yourscript.lua"
-
+local githubScriptURL = "https://github.com/0tff/dumpfolder/blob/main/almfao.lua"
 spawn(function()
     fadeInAndOut(titleLabel)
     executeGitHubScript(githubScriptURL)
