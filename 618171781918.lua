@@ -1,4 +1,4 @@
--- Funzione per loggare i risultati con emoji
+
 function logMessage(testName, status, details)
     local statusEmoji = status == "yes" and "✅" or "❌"
     print(string.format("%s %s: %s", statusEmoji, testName, details))
