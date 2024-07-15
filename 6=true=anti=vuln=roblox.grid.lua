@@ -1,22 +1,70 @@
--- Obfuscated code
-local encryptedScript = "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3d5dmVybnBsZWFrZXIvV1lWRVJOL21haW4vV1lWRVJOLmx1YQ=="
+-- Create the GUI elements
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local TextBox = Instance.new("TextBox")
+local AutoButton = Instance.new("TextButton")
+local ManualButton = Instance.new("TextButton")
 
-local function decodeBase64(data)
-    local b = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-    data = string.gsub(data, '[^'..b..'=]', '')
-    return (data:gsub('.', function(x)
-        if x == '=' then return '' end
-        local r,f='',(b:find(x)-1)
-        for i=6,1,-1 do r=r..(f%2^i-f%2^(i-1)>0 and '1' or '0') end
-        return r;
-    end):gsub('%d%d%d?%d?%d?%d?%d?%d?', function(x)
-        if #x ~= 8 then return '' end
-        local c=0
-        for i=1,8 do c=c+(x:sub(i,i)=='1' and 2^(8-i) or 0) end
-        return string.char(c)
-    end))
+-- Set properties for the ScreenGui
+ScreenGui.Name = "PurchaseGui"
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Set properties for the Frame
+Frame.Name = "MainFrame"
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Frame.Position = UDim2.new(0.5, -100, 0.5, -50)
+Frame.Size = UDim2.new(0, 200, 0, 100)
+
+-- Set properties for the TextBox
+TextBox.Name = "ProductIdBox"
+TextBox.Parent = Frame
+TextBox.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+TextBox.Position = UDim2.new(0.1, 0, 0.1, 0)
+TextBox.Size = UDim2.new(0.8, 0, 0.3, 0)
+TextBox.PlaceholderText = "Enter Product ID"
+
+-- Set properties for the AutoButton
+AutoButton.Name = "AutoButton"
+AutoButton.Parent = Frame
+AutoButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+AutoButton.Position = UDim2.new(0.1, 0, 0.5, 0)
+AutoButton.Size = UDim2.new(0.35, 0, 0.3, 0)
+AutoButton.Text = "Auto"
+
+-- Set properties for the ManualButton
+ManualButton.Name = "ManualButton"
+ManualButton.Parent = Frame
+ManualButton.BackgroundColor3 = Color3.fromRGB(0, 0, 255)
+ManualButton.Position = UDim2.new(0.55, 0, 0.5, 0)
+ManualButton.Size = UDim2.new(0.35, 0, 0.3, 0)
+ManualButton.Text = "Manual"
+
+-- Reference to MarketplaceService
+local MarketplaceService = game:GetService("MarketplaceService")
+
+-- Function to prompt a purchase
+local function promptPurchase(productId)
+    local player = game.Players.LocalPlayer
+    MarketplaceService:PromptProductPurchase(player, tonumber(productId))
 end
 
-local decodedURL = decodeBase64(encryptedScript)
+-- Connect AutoButton to promptPurchase automatically
+AutoButton.MouseButton1Click:Connect(function()
+    local productId = TextBox.Text
+    if productId and tonumber(productId) then
+        promptPurchase(productId)
+    else
+        warn("Invalid Product ID")
+    end
+end)
 
-loadstring(game:HttpGet(decodedURL, true))()
+-- Connect ManualButton to promptPurchase on button click
+ManualButton.MouseButton1Click:Connect(function()
+    local productId = TextBox.Text
+    if productId and tonumber(productId) then
+        promptPurchase(productId)
+    else
+        warn("Invalid Product ID")
+    end
+end)
