@@ -1,4 +1,6 @@
--- Create the GUI elements
+
+    print"script loaded x1 )
+    -- Create the GUI elements
 local ScreenGui = Instance.new("ScreenGui")
 local Frame = Instance.new("Frame")
 local TextBox = Instance.new("TextBox")
@@ -64,16 +66,24 @@ local function promptPurchase(productId)
     end
 end
 
--- Connect AutoButton to promptPurchase automatically
+-- Connect AutoButton to promptPurchase
 AutoButton.MouseButton1Click:Connect(function()
     local productId = TextBox.Text
+    if productId == "" then
+        warn("Product ID is empty")
+        return
+    end
     print("AutoButton clicked with Product ID: " .. productId)
     promptPurchase(productId)
 end)
 
--- Connect ManualButton to promptPurchase on button click
+-- Connect ManualButton to promptPurchase
 ManualButton.MouseButton1Click:Connect(function()
     local productId = TextBox.Text
+    if productId == "" then
+        warn("Product ID is empty")
+        return
+    end
     print("ManualButton clicked with Product ID: " .. productId)
     promptPurchase(productId)
 end)
