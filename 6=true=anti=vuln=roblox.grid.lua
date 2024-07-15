@@ -46,25 +46,34 @@ local MarketplaceService = game:GetService("MarketplaceService")
 -- Function to prompt a purchase
 local function promptPurchase(productId)
     local player = game.Players.LocalPlayer
-    MarketplaceService:PromptProductPurchase(player, tonumber(productId))
+    if not player then
+        warn("LocalPlayer not found")
+        return
+    end
+    if not tonumber(productId) then
+        warn("Invalid Product ID")
+        return
+    end
+
+    local success, errorMessage = pcall(function()
+        MarketplaceService:PromptProductPurchase(player, tonumber(productId))
+    end)
+
+    if not success then
+        warn("Failed to prompt purchase: " .. errorMessage)
+    end
 end
 
 -- Connect AutoButton to promptPurchase automatically
 AutoButton.MouseButton1Click:Connect(function()
     local productId = TextBox.Text
-    if productId and tonumber(productId) then
-        promptPurchase(productId)
-    else
-        warn("Invalid Product ID")
-    end
+    print("AutoButton clicked with Product ID: " .. productId)
+    promptPurchase(productId)
 end)
 
 -- Connect ManualButton to promptPurchase on button click
 ManualButton.MouseButton1Click:Connect(function()
     local productId = TextBox.Text
-    if productId and tonumber(productId) then
-        promptPurchase(productId)
-    else
-        warn("Invalid Product ID")
-    end
+    print("ManualButton clicked with Product ID: " .. productId)
+    promptPurchase(productId)
 end)
